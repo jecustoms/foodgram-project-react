@@ -20,7 +20,7 @@ DB_HOST=db
 DB_PORT=5432
 ```
 
-Для запуска сервера на локальной машине необходимо сделать следующее:
+3. Для запуска сервера на локальной машине необходимо сделать следующее:
 ```
 Первый запуск
 cd backend/
@@ -30,7 +30,7 @@ docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py collectstatic --no-input
 
-Последующие запуски
+Для последующих запусков
 cd backend/
 docker-compose up -d
 
