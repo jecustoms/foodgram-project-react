@@ -1,14 +1,14 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from ..api.models import Recipe
+from ..api.models import Recipe, Subscription
 
 User = get_user_model()
 
 
 class SubRecipeSerializer(serializers.ModelSerializer):
 
-    class Meta():
+    class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
 
@@ -29,6 +29,21 @@ class UserSerializer(serializers.ModelSerializer):
         if not user.is_authenticated:
             return False
         return obj.subscriber.filter(user=user).exists()
+
+    def validate(self, request_method, data, author, user, subscribed):
+        if request_method == 'GET':
+            if author != user and not subscribed:
+                Subscription.objects.create(user=user, author=author)
+                return data
+            raise serializers.ValidationError(
+                'Вы или уже подписаны на этого автора, или пытаетесь '
+                'подписаться на себя, что невозможно'
+            )
+        if not user.subscribed_on.filter(author=author).exists():
+            raise serializers.ValidationError(
+                'Вы не подписаны на данного автора (напоминание: на себя '
+                'подписаться невозможно)'
+            )
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):

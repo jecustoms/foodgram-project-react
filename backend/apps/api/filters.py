@@ -5,14 +5,11 @@ from .models import Ingredient, Recipe
 
 
 class IngredientNameFilter(FilterSet):
-    name = CharFilter(field_name='name', method='name_starts_with')
+    name = CharFilter(field_name='name', lookup_expr='name')
 
     class Meta:
         model = Ingredient
         fields = ('name',)
-
-    def name_starts_with(self, queryset, slug, name):
-        return queryset.filter(name__startswith=name)
 
 
 class RecipeFilter(FilterSet):
@@ -34,9 +31,8 @@ class RecipeFilter(FilterSet):
         user = self.request.user
         if not user.is_authenticated:
             return queryset
-        bool_dict = {'true': True, 'false': False}
-        is_favorited = self.request.query_params.get('is_favorited', False)
-        if bool_dict.get(is_favorited, False):
+        is_favorited = self.request.query_params.get('is_favorited')
+        if is_favorited is not None:
             return queryset.filter(
                 is_favorited__user=self.request.user
             ).distinct()
@@ -46,11 +42,8 @@ class RecipeFilter(FilterSet):
         user = self.request.user
         if not user.is_authenticated:
             return queryset
-        bool_dict = {'true': True, 'false': False}
-        is_favorited = self.request.query_params.get(
-            'is_in_shopping_cart', False
-        )
-        if bool_dict.get(is_favorited, False):
+        is_favorited = self.request.query_params.get('is_in_shopping_cart')
+        if is_favorited is not None:
             return queryset.filter(
                 is_in_shopping_cart__user=self.request.user
             ).distinct()

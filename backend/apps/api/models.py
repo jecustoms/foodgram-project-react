@@ -35,7 +35,6 @@ class Tag(models.Model):
 class Ingredient(models.Model):
     name = models.CharField(
         verbose_name='Название',
-        blank=False,
         max_length=50
     )
     measurement_unit = models.CharField(
@@ -88,7 +87,6 @@ class Recipe(models.Model):
     image = models.ImageField(
         verbose_name='Изображение',
         upload_to='recipes/',
-        blank=False,
     )
     text = models.TextField(
         verbose_name='Описание',
@@ -97,13 +95,11 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='RecipeIngredient',
-        blank=False,
         related_name='recipes',
         verbose_name='Ингредиенты'
     )
     tags = models.ManyToManyField(
         to=Tag,
-        blank=False,
         related_name='recipes',
         verbose_name='Тэги'
     )
@@ -113,7 +109,6 @@ class Recipe(models.Model):
                 1, message='минимальное время готовки 1 минута'
             )
         ],
-        blank=False,
         verbose_name='Время приготовления в минутах'
     )
 
@@ -137,7 +132,9 @@ class RecipeIngredient(models.Model):
         on_delete=models.CASCADE,
         related_name='amounts'
     )
-    amount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField(
+        verbose_name='Количество',
+    )
 
     class Meta:
         app_label = 'api'
