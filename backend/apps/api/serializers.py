@@ -155,28 +155,28 @@ class FavouriteSerializer(serializers.ModelSerializer):
         model = models.Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
 
-    def validate_favorite(self, request_method, data, user, recipe):
-        if request_method == 'GET':
+    def is_valid(self, flag, request_method, data, user, recipe):
+        if flag == 'favorite':
+            if request_method == 'GET':
+                if not user.is_favorited.filter(recipe=recipe).exists():
+                    models.Favourite.objects.create(user=user, recipe=recipe)
+                    return data
+                raise serializers.ValidationError(
+                    'Этот рецепт уже есть в избранном'
+                )
             if not user.is_favorited.filter(recipe=recipe).exists():
-                models.Favourite.objects.create(user=user, recipe=recipe)
-                return data
-            raise serializers.ValidationError(
-                'Этот рецепт уже есть в избранном'
-            )
-        if not user.is_favorited.filter(recipe=recipe).exists():
-            raise serializers.ValidationError(
-                'Этого рецепта не было в вашем избранном'
-            )
-
-    def validate_shopping_cart(self, request_method, data, user, recipe):
-        if request_method == 'GET':
+                raise serializers.ValidationError(
+                    'Этого рецепта не было в вашем избранном'
+                )
+        if flag == 'shop_cart':
+            if request_method == 'GET':
+                if not user.is_in_shopping_cart.filter(recipe=recipe).exists():
+                    models.ShoppingCart.objects.create(user=user, recipe=recipe)
+                    return data
+                raise serializers.ValidationError(
+                    'Этот рецепт уже есть в списке покупок'
+                )
             if not user.is_in_shopping_cart.filter(recipe=recipe).exists():
-                models.ShoppingCart.objects.create(user=user, recipe=recipe)
-                return data
-            raise serializers.ValidationError(
-                'Этот рецепт уже есть в списке покупок'
-            )
-        if not user.is_in_shopping_cart.filter(recipe=recipe).exists():
-            raise serializers.ValidationError(
-                'Этого рецепта не было в вашем списке покупок'
-            )
+                raise serializers.ValidationError(
+                    'Этого рецепта не было в вашем списке покупок'
+                )

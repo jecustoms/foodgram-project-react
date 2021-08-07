@@ -40,7 +40,6 @@ class Ingredient(models.Model):
     measurement_unit = models.CharField(
         verbose_name='Единица измерения',
         max_length=10,
-        blank=False
     )
 
     class Meta:
@@ -82,7 +81,6 @@ class Recipe(models.Model):
     name = models.CharField(
         verbose_name='Название',
         max_length=30,
-        blank=False
     )
     image = models.ImageField(
         verbose_name='Изображение',
@@ -90,7 +88,6 @@ class Recipe(models.Model):
     )
     text = models.TextField(
         verbose_name='Описание',
-        blank=False
     )
     ingredients = models.ManyToManyField(
         Ingredient,

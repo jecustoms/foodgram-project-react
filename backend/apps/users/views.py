@@ -72,7 +72,7 @@ class UserViewSet(viewsets.ModelViewSet):
         user = request.user
         subscribed = user.subscribed_on.filter(author=author).exists()
         serializer = UserSerializer(author, context={'request': request})
-        serializer.validate(
+        serializer.is_valid(
             request.method, serializer.data, author, user, subscribed
         )
         if request.method == 'GET':

@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
             return False
         return obj.subscriber.filter(user=user).exists()
 
-    def validate(self, request_method, data, author, user, subscribed):
+    def is_valid(self, request_method, data, author, user, subscribed):
         if request_method == 'GET':
             if author != user and not subscribed:
                 Subscription.objects.create(user=user, author=author)

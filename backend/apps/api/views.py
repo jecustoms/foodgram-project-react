@@ -60,9 +60,8 @@ class RecipeViewSet(mixins.ListModelMixin,
         serializer = serializers.FavouriteSerializer(
             recipe, context={'request': request}
         )
-        serializer.validate_favorite(
-            request.method, serializer.data, user=user, recipe=recipe
-        )
+        serializer.is_valid(flag='favorite', request_method=request.method,
+                            data=serializer.data, user=user, recipe=recipe)
         if request.method == 'GET':
             return Response(
                 data=serializer.data, status=status.HTTP_201_CREATED
@@ -79,9 +78,8 @@ class RecipeViewSet(mixins.ListModelMixin,
         serializer = serializers.FavouriteSerializer(
             recipe, context={'request': request}
         )
-        serializer.validate_shopping_cart(
-            request.method, serializer.data, user=user, recipe=recipe
-        )
+        serializer.is_valid(flag='shop_cart', request_method=request.method,
+                            data=serializer.data, user=user, recipe=recipe)
         if request.method == 'GET':
             return Response(
                 data=serializer.data,status=status.HTTP_201_CREATED
