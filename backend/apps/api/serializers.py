@@ -1,9 +1,6 @@
 from django.contrib.auth import get_user_model
-from django.core.files.base import ContentFile
 from rest_framework import serializers
-from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from rest_framework.response import Response
 
 from ..users.serializers import UserSerializer
 from . import models
@@ -152,31 +149,50 @@ class RecipeWriteSerializer(serializers.ModelSerializer):
 class FavouriteSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = models.Recipe
-        fields = ('id', 'name', 'image', 'cooking_time')
+        model = models.Favourite
+        fields = ('user', 'recipe')
 
-    def validate_favorite(self, request_method, data, user, recipe):
-        if request_method == 'GET':
-            if not user.is_favorited.filter(recipe=recipe).exists():
-                models.Favourite.objects.create(user=user, recipe=recipe)
+    def validate(self, data):
+        if request.method == 'GET':
+            if not data['user'].is_favorited.filter(
+                recipe=data['recipe']
+            ).exists():
+                models.Favourite.objects.create(
+                    user=data['user'], recipe=data['recipe']
+                )
                 return data
             raise serializers.ValidationError(
                 'Этот рецепт уже есть в избранном'
             )
-        if not user.is_favorited.filter(recipe=recipe).exists():
+        if not data['user'].is_favorited.filter(
+            recipe=data['recipe']
+        ).exists():
             raise serializers.ValidationError(
                 'Этого рецепта не было в вашем избранном'
             )
-    
-    def validate_shopping_cart(self, request_method, data, user, recipe):
-        if request_method == 'GET':
-            if not user.is_in_shopping_cart.filter(recipe=recipe).exists():
-                models.ShoppingCart.objects.create(user=user, recipe=recipe)
+
+
+class ShoppingCartSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.ShoppingCart
+        fields = ('user', 'recipe')
+
+    def validate(self, data):
+        if request.method == 'GET':
+            if not data['user'].is_in_shopping_cart.filter(
+                recipe=data['recipe']
+            ).exists():
+                models.ShoppingCart.objects.create(
+                    user=data['user'], recipe=data['recipe']
+                )
                 return data
             raise serializers.ValidationError(
                 'Этот рецепт уже есть в списке покупок'
             )
-        if not user.is_in_shopping_cart.filter(recipe=recipe).exists():
+        if not data['user'].is_in_shopping_cart.filter(
+            recipe=data['recipe']
+        ).exists():
             raise serializers.ValidationError(
                 'Этого рецепта не было в вашем списке покупок'
             )

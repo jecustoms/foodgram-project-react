@@ -30,18 +30,20 @@ class UserSerializer(serializers.ModelSerializer):
             return False
         return obj.subscriber.filter(user=user).exists()
 
-    def validate_subscribe(
-        self, request_method, data, author, user, subscribed
-    ):
-        if request_method == 'GET':
-            if author != user and not subscribed:
-                Subscription.objects.create(user=user, author=author)
+    def validate(self, data):
+        if requeset.method == 'GET':
+            if data['author'] != data['user'] and not data['subscribed']:
+                Subscription.objects.create(
+                    user=data['user'], author=data['author']
+                )
                 return data
             raise serializers.ValidationError(
                 'Вы или уже подписаны на этого автора, или пытаетесь '
                 'подписаться на себя, что невозможно'
             )
-        if not user.subscribed_on.filter(author=author).exists():
+        if not data['user'].subscribed_on.filter(
+            author=data['author']
+        ).exists():
             raise serializers.ValidationError(
                 'Вы не подписаны на данного автора (напоминание: на себя '
                 'подписаться невозможно)'
