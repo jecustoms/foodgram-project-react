@@ -74,7 +74,7 @@ class RecipeViewSet(mixins.ListModelMixin,
     def shopping_cart(self, request, pk):
         recipe = get_object_or_404(models.Recipe, pk=pk)
         user = request.user
-        serializer = serializers.FavouriteSerializer(
+        serializer = serializers.ShoppingCartSerializer(
             recipe, context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
