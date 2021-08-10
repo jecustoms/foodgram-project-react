@@ -11,9 +11,9 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file: 
-      - ./.env
+      - ./backend/.env
   backend:
-    image: emelyaart/foodgram-project-react 
+    image: jecustoms/foodgram-project-react 
     restart: always
     volumes: 
       - static_value:/code/static/
@@ -21,7 +21,7 @@ services:
     depends_on: 
       - db
     env_file: 
-      - ./.env
+      - ./backend/.env
   nginx:
     image: nginx:1.19.3
     restart: always
