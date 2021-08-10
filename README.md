@@ -1,5 +1,5 @@
 # praktikum_new_diplom
-![Foodgram workflow](https://github.com/jecustoms/foodgram-project-react/actions/workflows/foodgram_workflow.yaml/badge.svg)
+[![Foodgram-project-react Workflow](https://github.com/jecustoms/foodgram-project-react/actions/workflows/main.yml/badge.svg)](https://github.com/jecustoms/foodgram-project-react/actions/workflows/main.yml)
 
 # Проект Foodgram
 Foodgram сделан для публикации рецептов. Авторизованные пользователи
