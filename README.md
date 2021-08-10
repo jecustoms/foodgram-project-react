@@ -7,13 +7,17 @@ Foodgram сделан для публикации рецептов. Автори
 в покупки, скачать список покупок ингредиентов для добавленных в покупки
 рецептов.
 
+# Проект в интернете
+Проект будет запущен и доступен по адресу [временный адрес](http://178.154.211.129)
+Документацию к проекту можно посмотреть на странице `api/docs`.
+Администрирование доступно на странице `/admin`: логин: review_master, пароль: review2021
 
 # Установка
 1. Склонировать репозиторий
-2. Создать файл `.env' и заполнить его:
+2. Создать файл `.env' в папке backend и заполнить его:
 ```
 SECRET_KEY= #ключ django проекта
-DB_ENGINE=django.db.backends.postgresql
+DB_ENGINE=django.db.backends.postgresql_psycopg2
 DB_NAME=postgres
 POSTGRES_USER=  #имя пользователя postgres
 POSTGRES_PASSWORD=  #пароль пользователя postgres
@@ -21,21 +25,18 @@ DB_HOST=db
 DB_PORT=5432
 ```
 
-3. Для запуска сервера на локальной машине необходимо сделать следующее:
-```
-Первый запуск
-cd backend/
-docker-compose up -d
-после запуска контейнеров
-docker-compose exec web python manage.py migrate
-docker-compose exec web python manage.py createsuperuser
-docker-compose exec web python manage.py collectstatic --no-input
-
-Для последующих запусков
-cd backend/
-docker-compose up -d
+3. Для запуска необходимо сделать следующее:
+!ВАЖНО! Для работы сервиса необходим заранее установленный Docker и docker-compose
 
 ```
-Документацию к проекту можно посмотреть на странице `api/docs`.
-Администрирование доступно на странице `/admin`.
-Проект будет запущен и доступен по адресу [localhost](http://localhost).
+>>> Первый запуск из короневой директории:
+docker-compose up -d --build
+
+>>> После запуска контейнеров
+docker-compose exec backend python manage.py makemigrations
+docker-compose exec backend python manage.py migrate --no-input
+docker-compose exec backend python manage.py collectstatic --no-input
+
+>>> Создаем суперпользователя
+docker-compose exec backend python manage.py createsuperuser
+```
