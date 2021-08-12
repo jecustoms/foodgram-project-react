@@ -45,11 +45,11 @@ DB_PORT=5432
 >>> Первый запуск из короневой директории:
 docker-compose up -d --build
 
->>> После запуска контейнеров
+>>> После запуска контейнеров:
 docker-compose exec backend python manage.py makemigrations
 docker-compose exec backend python manage.py migrate --no-input
 docker-compose exec backend python manage.py collectstatic --no-input
 
->>> Создаем суперпользователя
+>>> Создаем суперпользователя:
 docker-compose exec backend python manage.py createsuperuser
 ```
